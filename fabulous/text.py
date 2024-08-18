@@ -115,7 +115,10 @@ class Text(image.Image):
         self.color = grapefruit.Color.NewFromHtml(color)
         self.font = ImageFont.truetype(resolve_font(font), fsize)
         skew = skew or 0
-        size = tuple([n + 3 + skew for n in self.font.getsize(self.text)])
+        if hasattr(self.font, 'getsize'):
+            size = tuple([n + 3 + skew for n in self.font.getsize(self.text)])
+        else:
+            size = tuple([n + 3 + skew for n in self.font.getbbox(self.text)[2:4]])
         self.img = Image.new("RGBA", size, (0, 0, 0, 0))
         cvs = ImageDraw.Draw(self.img)
         if shadow:
